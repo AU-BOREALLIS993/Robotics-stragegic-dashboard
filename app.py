@@ -22,7 +22,7 @@ else:
 
 # 2. Live API Connection Configuration
 # Replace the placeholder text inside quotes with your actual key from Step 1!
-TBA_API_KEY = "YOUR_BLUE_ALLIANCE_API_KEY_HERE"
+TBA_API_KEY = "N3lfxmEl2ELs2ywwVeDdBhHoJSGSbSISqusTnu4y0rbXJrE2bqGBO29p1GL2sQJ1"
 EVENT_KEY = "2026mdsv" # Target event key (e.g., 2026 Maryland District Severn Event)
 
 @st.cache_data(ttl=600)  # Caches web data for 10 minutes so your app runs fast
