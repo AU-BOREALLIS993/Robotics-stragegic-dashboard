@@ -91,8 +91,7 @@ if not df.empty:
         st.subheader("🛡️ Custom Defensive Picklist")
         filtered_df = working_df[
             (working_df["Defensive Bot"].str.contains("Yes", case=False, na=False)) | 
-            (working_df["How effective? (Defense)"].str.contains("High|Medium", case=False, na=False))
-        ]
+            (working_df["How effective? (Defense)"].str.contains("High|Medium", case=False, na=False)) ]
         display_df = filtered_df
     else:
         st.subheader("📋 Integrated Event Leaderboard")
