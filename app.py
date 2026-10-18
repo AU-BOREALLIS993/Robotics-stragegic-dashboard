@@ -13,13 +13,13 @@ st.markdown("---")
 csv_filename = "scouting_data.csv"
 
 if os.path.exists(csv_filename):
-    # FIX: Using sep=r'\s+' handles files separated by tabs/multiple spaces cleanly
-    df = pd.read_csv(csv_filename, sep=r'\s+')
+    # Reads standard comma-separated files flawlessly
+    df = pd.read_csv(csv_filename)
     
-    # Standardize column headers by trimming any accidental hidden spaces
+    # Standardize column headers by trimming accidental whitespace
     df.columns = df.columns.str.strip()
     
-    # Ensure "Team Number" column is cleaned up and treated as a string
+    # Ensure "Team Number" column exists and is treated as a clean string
     if "Team Number" in df.columns:
         df["Team Number"] = df["Team Number"].astype(str).str.strip()
     else:
@@ -40,7 +40,7 @@ def fetch_live_tba_metrics(api_key, event_key):
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             data = response.json()
-            oprs = {k: round(v, 2) for k, v in data.get("oprs", {}).items()}
+            oprs = {str(k).strip(): round(v, 2) for k, v in data.get("oprs", {}).items()}
             return oprs
     except:
         pass
@@ -48,7 +48,7 @@ def fetch_live_tba_metrics(api_key, event_key):
 
 live_oprs = fetch_live_tba_metrics(TBA_API_KEY, EVENT_KEY)
 
-# # 1. Sidebar Strategic Inputs
+# 1. Sidebar Strategic Inputs
 st.sidebar.header("Strategic Controls")
 strategy_focus = st.sidebar.selectbox(
     "Select Alliance Team Role",
@@ -68,14 +68,12 @@ with st.sidebar.form(key="pit_form", clear_on_submit=True):
 if submit_pit and pit_team:
     st.sidebar.success(f"Pit configuration saved for Team {pit_team}!")
 
-# # 2. Advanced Mathematical Calculations and Data Merging
+# 2. Advanced Mathematical Calculations and Data Merging
 if not df.empty:
     working_df = df.copy()
     
-    # FIX: Corrected typo from "Toan Number" to "Team Number" 
+    # Map live alliance OPR data metrics cleanly
     working_df["Live OPR (Official)"] = working_df["Team Number"].map(live_oprs).fillna(0.0)
-    
-    # Direct functional links
     working_df["Official Standings Profile"] = "https://firstinspires.org"
     
     def extract_max_points(val):
@@ -87,13 +85,13 @@ if not df.empty:
                 return 0.0
         return 0.0
 
-    # FIX: Built defensive check in case point columns aren't calculated yet in CSV
+    # Defensive protection checking for missing metrics fields
     if "Robot Points / Shots per match" in working_df.columns:
         working_df["Cleaned Points"] = working_df["Robot Points / Shots per match"].apply(extract_max_points)
     else:
         working_df["Cleaned Points"] = 0.0
 
-    # # 3. Handle Dropdown Control Flows
+    # 3. Handle Dropdown Control Flows
     if strategy_focus == "Offensive Focus":
         st.subheader("Custom Offensive Picklist")
         def calculate_hybrid_offense(row):
